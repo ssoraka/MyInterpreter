@@ -7,8 +7,12 @@ import java.util.List;
 
 public class Lexer {
 
-    static final TokenType[] OPERATION_TOKEN = {TokenType.PLUS, TokenType.MINUS, TokenType.STAR, TokenType.SLASH};
-    static final String OPERATION_CHARS = "+-*/";
+    static final TokenType[] OPERATION_TOKEN = {
+            TokenType.PLUS, TokenType.MINUS,
+            TokenType.STAR, TokenType.SLASH,
+            TokenType.LPAREN, TokenType.RPAREN
+    };
+    static final String OPERATION_CHARS = "+-*/()";
     private final String input;
     private final int length;
 
@@ -28,6 +32,9 @@ public class Lexer {
             char current = peek(0);
             if (Character.isDigit(current)) {
                 tokenizeNumber();
+            } else if (current == '#') {
+                next();
+                tokenizeHexNumber();
             } else if (OPERATION_CHARS.indexOf(current) != -1) {
                 tokenizeOperator();
             } else {
@@ -41,6 +48,21 @@ public class Lexer {
         int position = OPERATION_CHARS.indexOf(peek(0));
         addToken(OPERATION_TOKEN[position]);
         next();
+    }
+
+    private void tokenizeHexNumber() {
+        final StringBuilder buffer = new StringBuilder();
+        char current = peek(0);
+
+        while (Character.isDigit(current) || isHexNumber(current)) {
+            buffer.append(current);
+            current = next();
+        }
+        addToken(TokenType.HEX_NUMBER, buffer.toString());
+    }
+
+    private boolean isHexNumber(char current) {
+        return "abcdefABCDEF".indexOf(current) != -1;
     }
 
     private void tokenizeNumber() {

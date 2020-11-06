@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        String text = "2 + 3 * 2";
+        String text = "(2 + 3) * #F";
 
         List<Token> tokens = new Lexer(text).tokenize();
         for (Token t :      tokens) {
@@ -16,7 +16,7 @@ public class Main {
 
         List<Expression> expressions = new Parser(tokens).parse();
         for (Expression e : expressions) {
-            System.out.println(e + ":" + e.eval());
+            System.out.println(e + " = " + e.eval());
         }
     }
 }
