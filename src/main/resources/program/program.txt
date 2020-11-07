@@ -1,0 +1,4 @@
+word = ПИ + 2
+word2 = 2 + 3
+print word
+print word2

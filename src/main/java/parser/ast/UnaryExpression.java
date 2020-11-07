@@ -1,5 +1,8 @@
 package parser.ast;
 
+import lib.NumberValue;
+import lib.Value;
+
 public class UnaryExpression implements Expression{
 
     private final Expression expr;
@@ -11,9 +14,9 @@ public class UnaryExpression implements Expression{
     }
 
     @Override
-    public double eval() {
+    public Value eval() {
         switch (operation) {
-            case '-' : return -expr.eval();
+            case '-' : return new NumberValue(-expr.eval().asDouble());
             case '+' :
             default :
                 return expr.eval();

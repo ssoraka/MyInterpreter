@@ -1,5 +1,8 @@
 package parser.ast;
 
+import lib.NumberValue;
+import lib.Value;
+
 public class BinaryExpression implements Expression{
 
     private Expression expr1, expr2;
@@ -13,19 +16,21 @@ public class BinaryExpression implements Expression{
 
 
     @Override
-    public double eval() {
+    public Value eval() {
+        final double number1 = expr1.eval().asDouble();
+        final double number2 = expr1.eval().asDouble();
         switch (operation) {
-            case '*' : return expr1.eval() * expr2.eval();
-            case '/' : return expr1.eval() / expr2.eval();
-            case '-' : return expr1.eval() - expr2.eval();
+            case '*' : return new NumberValue(number1 * number2);
+            case '/' : return new NumberValue(number1 / number2);
+            case '-' : return new NumberValue(number1 - number2);
             case '+' :
             default :
-                return expr1.eval() + expr2.eval();
+                return new NumberValue(number1 + number2);
         }
     }
 
     @Override
     public String toString() {
-        return String.format("%s %c %s", expr1, operation, expr2);
+        return String.format("[%s %c %s]", expr1, operation, expr2);
     }
 }
