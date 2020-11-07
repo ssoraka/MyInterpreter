@@ -1,14 +1,19 @@
 package parser.ast;
 
 import lib.NumberValue;
+import lib.StringValue;
 import lib.Value;
 
-public class NumberExpression implements Expression {
+public class ValueExpression implements Expression {
 
     private final Value value;
 
-    public NumberExpression(double value) {
+    public ValueExpression(double value) {
         this.value = new NumberValue(value);
+    }
+
+    public ValueExpression(String value) {
+        this.value = new StringValue(value);
     }
 
     @Override

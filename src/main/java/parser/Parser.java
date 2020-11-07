@@ -97,14 +97,18 @@ public class Parser {
         final Token current = get(0);
 
         if (match(TokenType.NUMBER)) {
-            return new NumberExpression(Double.parseDouble(current.getText()));
+            return new ValueExpression(Double.parseDouble(current.getText()));
         }
         if (match(TokenType.HEX_NUMBER)) {
-            return new NumberExpression(Long.parseLong(current.getText(), 16));
+            return new ValueExpression(Long.parseLong(current.getText(), 16));
+        }
+        if (match(TokenType.TEXT)) {
+            return new ValueExpression(current.getText());
         }
         if (match(TokenType.WORD)) {
             return new VariableExpression(current.getText());
         }
+
         if (match(TokenType.LPAREN)) {
             Expression result = expression();
             match(TokenType.RPAREN);

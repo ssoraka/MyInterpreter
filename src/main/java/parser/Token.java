@@ -22,10 +22,7 @@ public class Token {
 
     @Override
     public String toString() {
-        return "Token{" +
-                "text='" + text + '\'' +
-                ", type=" + type +
-                '}';
+        return type + "\t\t|" + text + "|";
     }
 
     public Token(TokenType type, String text) {

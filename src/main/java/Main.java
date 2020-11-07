@@ -13,22 +13,21 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) throws IOException {
 //        String text = "(PI + 3) * #F + 4 + 5 + 3 * 5";
-        String text = new String(Files.readAllBytes(Paths.get("./target/classes/program/program.txt")), "UTF-8");
+        String text = new String(Files.readAllBytes(Paths.get("./target/classes/program.txt")), "UTF-8");
 
         List<Token> tokens = new Lexer(text).tokenize();
-        for (Token t :      tokens) {
-            System.out.println(t);
-        }
+//        for (Token t :      tokens) {
+//            System.out.println(t);
+//        }
 
         List<Statement> statements = new Parser(tokens).parse();
-        for (Statement s : statements) {
-            System.out.println(s);
-        }
+//        for (Statement s : statements) {
+//            System.out.println(s);
+//        }
         for (Statement s : statements) {
             s.execute();
         }
 
-        System.out.println("word= " + Variables.get("word"));
-        System.out.println("word2= " + Variables.get("word2"));
+
     }
 }

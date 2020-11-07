@@ -68,7 +68,7 @@ public class Lexer {
             buffer.append(current);
             current = next();
         }
-        next();
+        next(); //skip closing "
         addToken(TokenType.TEXT, buffer.toString());
     }
 

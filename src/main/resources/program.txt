@@ -1,4 +1,8 @@
 word = ПИ + 2
 word2 = 2 + 3
-print word
-print word2
+
+print "word = " + word + "\n"
+print "word2 = " + word2  + "\n"
+
+str = "a" * 5 + "bc" * 4 + "\n"
+print str
