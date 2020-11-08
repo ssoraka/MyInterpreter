@@ -5,10 +5,12 @@ print "word = " + word + "\n"
 print "word2 = " + word2  + "\n"
 
 str = "a" * 5 + "bc" * 4 + "\n"
-print str
-
+//print str
 print 10 > 9
 print "\n"
 
 if 1 < 2 print "1 == 1"
 else print "1 != 1"
+
+if (1 < 10 && 10 > 50) print "true"
+else print "false"

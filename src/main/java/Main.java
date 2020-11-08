@@ -16,14 +16,14 @@ public class Main {
         String text = new String(Files.readAllBytes(Paths.get("./target/classes/program.txt")), "UTF-8");
 
         List<Token> tokens = new Lexer(text).tokenize();
-//        for (Token t :      tokens) {
-//            System.out.println(t);
-//        }
+        for (Token t :      tokens) {
+            System.out.println(t);
+        }
 
         List<Statement> statements = new Parser(tokens).parse();
-//        for (Statement s : statements) {
-//            System.out.println(s);
-//        }
+        for (Statement s : statements) {
+            System.out.println(s);
+        }
         for (Statement s : statements) {
             s.execute();
         }

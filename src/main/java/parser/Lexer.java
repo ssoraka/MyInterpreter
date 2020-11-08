@@ -119,15 +119,28 @@ public class Lexer {
     private void tokenizeOperator() {
         char current = peek(0);
         if (current == '/') {
-            if (current == '/') {
+            if (peek(1) == '/') {
                 next();
                 next();
                 tokenizeComment();
-            } else if (current == '*'){
+                return;
+            } else if (peek(1) == '*'){
                 next();
                 next();
                 tokenizeMultiLineComment();
+                return;
             }
+        }
+
+        final StringBuilder buffer = new StringBuilder();
+        while (true) {
+            final String text = buffer.toString();
+            if (!OPERATORS.containsKey(text + current) && !text.isEmpty()) {
+                addToken(OPERATORS.get(text));
+                return ;
+            }
+            buffer.append(current);
+            current = next();
         }
     }
 
@@ -172,12 +185,16 @@ public class Lexer {
     private void tokenizeMultiLineComment() {
         char current = peek(0);
         while (true) {
-            current = next();
-            if (current == '*' && peek(1) == '/') {
-
+            if (current == '\0') {
+                throw new RuntimeException("Missing close tag");
             }
-
+            if (current == '*' && peek(1) == '/') {
+                break ;
+            }
+            current = next();
         }
+        next();
+        next();
     }
 
     private char next() {
