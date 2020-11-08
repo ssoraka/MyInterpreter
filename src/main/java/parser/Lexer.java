@@ -6,13 +6,16 @@ import java.util.List;
 import java.util.Map;
 
 public class Lexer {
-    static final String OPERATION_CHARS = "+-*/()=<>!&|";
+    static final String OPERATION_CHARS = "+-*/(){}=<>!&|,";
 
     final private static Map<String, TokenType> OPERATORS;
     static {
         OPERATORS = new HashMap<>();
         OPERATORS.put("(", TokenType.LPAREN);
         OPERATORS.put(")", TokenType.RPAREN);
+        OPERATORS.put("{", TokenType.LBRASE);
+        OPERATORS.put("}", TokenType.RBRASE);
+        OPERATORS.put(",", TokenType.COMMA);
 
         OPERATORS.put("+", TokenType.PLUS);
         OPERATORS.put("-", TokenType.MINUS);
@@ -110,6 +113,11 @@ public class Lexer {
             case "print" : addToken(TokenType.PRINT); break;
             case "if" : addToken(TokenType.IF); break;
             case "else" : addToken(TokenType.ELSE); break;
+            case "while" : addToken(TokenType.WHILE); break;
+            case "for" : addToken(TokenType.FOR); break;
+            case "do" : addToken(TokenType.DO); break;
+            case "break" : addToken(TokenType.BREAK); break;
+            case "continue" : addToken(TokenType.CONTINUE); break;
             default :
                 addToken(TokenType.WORD, toString);
                 break;

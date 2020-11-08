@@ -2,7 +2,6 @@ package parser;
 
 import parser.ast.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Parser {
@@ -18,13 +17,30 @@ public class Parser {
         size = tokens.size();
     }
 
-    public List<Statement> parse() {
-        List<Statement> result = new ArrayList<>();
+    public Statement parse() {
+        final BlockStatement result = new BlockStatement();
 
         while (!match(TokenType.EOF)) {
             result.add(statement());
         }
         return result;
+    }
+
+    private Statement statementOrBlock() {
+        if (get(0).getType() == TokenType.LBRASE) {
+            return block();
+        }
+        return statement();
+    }
+
+    private Statement block() {
+        consume(TokenType.LBRASE);
+
+        final BlockStatement block = new BlockStatement();
+        while (!match(TokenType.RBRASE)) {
+            block.add(statement());
+        }
+        return block;
     }
 
     private Statement statement() {
@@ -33,6 +49,21 @@ public class Parser {
         }
         if (match(TokenType.IF)) {
             return ifElse();
+        }
+        if (match(TokenType.DO)) {
+            return doWhileStatement();
+        }
+        if (match(TokenType.WHILE)) {
+            return whileStatement();
+        }
+        if (match(TokenType.BREAK)) {
+            return new BreakStatement();
+        }
+        if (match(TokenType.CONTINUE)) {
+            return new ContinueStatement();
+        }
+        if (match(TokenType.FOR)) {
+            return forStatement();
         }
         return assignmentStatement();
     }
@@ -50,14 +81,39 @@ public class Parser {
 
     private Statement ifElse() {
         final Expression condition = expression();
-        final Statement ifStatement = statement();
+        final Statement ifStatement = statementOrBlock();
         final Statement elseStatement;
         if (match(TokenType.ELSE)) {
-            elseStatement = statement();
+            elseStatement = statementOrBlock();
         } else {
             elseStatement = null;
         }
         return new IfStatement(condition, ifStatement, elseStatement);
+    }
+
+    private Statement doWhileStatement() {
+        final Statement statement = statementOrBlock();
+        consume(TokenType.WHILE);
+        final Expression condition = expression();
+        return new DoWhileStatement(condition, statement);
+    }
+
+    private Statement whileStatement() {
+        final Expression condition = expression();
+        final Statement statement = statementOrBlock();
+        return new WhileStatement(condition, statement);
+    }
+
+    private Statement forStatement() {
+        consume(TokenType.LPAREN);
+        final Statement initialization = assignmentStatement();
+        consume(TokenType.COMMA);
+        final Expression condition = expression();
+        consume(TokenType.COMMA);
+        final Statement increment = assignmentStatement();
+        consume(TokenType.RPAREN);
+        final Statement statement = statementOrBlock();
+        return new ForStatement(initialization, condition, increment, statement);
     }
 
     private Expression expression() {

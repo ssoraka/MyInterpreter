@@ -10,6 +10,11 @@ public enum TokenType {
     PRINT,
     IF,
     ELSE,
+    WHILE,
+    FOR,
+    DO,
+    BREAK,
+    CONTINUE,
 
     PLUS,
     MINUS,
@@ -29,8 +34,11 @@ public enum TokenType {
     AMP,//&
     AMPAMP,//&&
 
-    LPAREN, //(
-    RPAREN, //)
+    LPAREN,//(
+    RPAREN,//)
+    LBRASE,//{
+    RBRASE,//}
+    COMMA,//,
 
     EOF
 }

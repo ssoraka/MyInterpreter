@@ -20,14 +20,9 @@ public class Main {
             System.out.println(t);
         }
 
-        List<Statement> statements = new Parser(tokens).parse();
-        for (Statement s : statements) {
-            System.out.println(s);
-        }
-        for (Statement s : statements) {
-            s.execute();
-        }
-
+        Statement program = new Parser(tokens).parse();
+        System.out.println(program.toString());
+        program.execute();
 
     }
 }

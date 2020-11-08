@@ -9,8 +9,29 @@ str = "a" * 5 + "bc" * 4 + "\n"
 print 10 > 9
 print "\n"
 
-if 1 < 2 print "1 == 1"
-else print "1 != 1"
 
-if (1 < 10 && 10 > 50) print "true"
+if 1 > 2 print "1 == 1\n"
+else print "1 < 2 !!!\n"
+
+if (1 < 10 || 10 > 50) {
+    print "true\n"
+
+    i = 0
+    do {
+        i = i + 1
+        print "i = " + i + "\n"
+    } while (i <= 10)
+
+    i = 0
+    while (i <= 10) {
+        i = i + 1
+        if i == 4 continue
+        print "i = " + i + "\n"
+    }
+
+    for (j = 0, j < 10, j = j + 1) {
+        if j == 4 continue
+        print "j = " + j + "\n"
+    }
+}
 else print "false"

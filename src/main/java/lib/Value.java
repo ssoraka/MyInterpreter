@@ -1,6 +1,6 @@
 package lib;
 
 public interface Value {
-    public double asDouble();
+    public double asNumber();
     public String asString();
 }
