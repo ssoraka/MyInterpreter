@@ -8,12 +8,26 @@ public enum TokenType {
 
     //string
     PRINT,
+    IF,
+    ELSE,
 
     PLUS,
     MINUS,
     STAR,
     SLASH,
     EQ,
+    LT,//<
+    GT,//>
+    EQEQ,//==
+    EXCL,//!
+    EXCLEQ,//!=
+    LTEQ,//<=
+    GTEQ,//>=
+
+    BAR,//|
+    BARBAR,//||
+    AMP,//&
+    AMPAMP,//&&
 
     LPAREN, //(
     RPAREN, //)

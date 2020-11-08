@@ -18,7 +18,7 @@ public class Parser {
         size = tokens.size();
     }
 
-    public List<Statement> parse(){
+    public List<Statement> parse() {
         List<Statement> result = new ArrayList<>();
 
         while (!match(TokenType.EOF)) {
@@ -30,6 +30,9 @@ public class Parser {
     private Statement statement() {
         if (match(TokenType.PRINT)) {
             return new PrintStatement(expression());
+        }
+        if (match(TokenType.IF)) {
+            return ifElse();
         }
         return assignmentStatement();
     }
@@ -45,19 +48,52 @@ public class Parser {
         throw new RuntimeException("Unknown statement");
     }
 
+    private Statement ifElse() {
+        final Expression condition = expression();
+        final Statement ifStatement = statement();
+        final Statement elseStatement;
+        if (match(TokenType.ELSE)) {
+            elseStatement = statement();
+        } else {
+            elseStatement = null;
+        }
+        return new IfStatement(condition, ifStatement, elseStatement);
+    }
+
     private Expression expression() {
-        return additive();
+        return conditional();
+    }
+
+    private Expression conditional() {
+        Expression result = additive();
+
+        while (true) {
+            if (match(TokenType.EQ)) {
+                result = new ConditionalExpression('=', result, additive());
+                continue;
+            }
+            if (match(TokenType.LT)) {
+                result = new ConditionalExpression('<', result, additive());
+                continue;
+            }
+            if (match(TokenType.GT)) {
+                result = new ConditionalExpression('>', result, additive());
+                continue;
+            }
+            break;
+        }
+        return result;
     }
 
     private Expression additive() {
         Expression result = multiplicative();
 
         while (true) {
-            if (match(TokenType.PLUS)){
+            if (match(TokenType.PLUS)) {
                 result = new BinaryExpression('+', result, multiplicative());
                 continue;
             }
-            if (match(TokenType.MINUS)){
+            if (match(TokenType.MINUS)) {
                 result = new BinaryExpression('-', result, multiplicative());
                 continue;
             }
@@ -70,11 +106,11 @@ public class Parser {
         Expression result = unary();
 
         while (true) {
-            if (match(TokenType.STAR)){
+            if (match(TokenType.STAR)) {
                 result = new BinaryExpression('*', result, unary());
                 continue;
             }
-            if (match(TokenType.SLASH)){
+            if (match(TokenType.SLASH)) {
                 result = new BinaryExpression('/', result, unary());
                 continue;
             }
@@ -84,10 +120,10 @@ public class Parser {
     }
 
     private Expression unary() {
-        if (match(TokenType.MINUS)){
+        if (match(TokenType.MINUS)) {
             return new UnaryExpression('-', primary());
         }
-        if (match(TokenType.PLUS)){
+        if (match(TokenType.PLUS)) {
             return primary();
         }
         return primary();

@@ -1,17 +1,38 @@
 package parser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Lexer {
+    static final String OPERATION_CHARS = "+-*/()=<>!&|";
 
-    static final TokenType[] OPERATION_TOKEN = {
-            TokenType.PLUS, TokenType.MINUS,
-            TokenType.STAR, TokenType.SLASH,
-            TokenType.LPAREN, TokenType.RPAREN,
-            TokenType.EQ
-    };
-    static final String OPERATION_CHARS = "+-*/()=";
+    final private static Map<String, TokenType> OPERATORS;
+    static {
+        OPERATORS = new HashMap<>();
+        OPERATORS.put("(", TokenType.LPAREN);
+        OPERATORS.put(")", TokenType.RPAREN);
+
+        OPERATORS.put("+", TokenType.PLUS);
+        OPERATORS.put("-", TokenType.MINUS);
+        OPERATORS.put("*", TokenType.STAR);
+        OPERATORS.put("/", TokenType.SLASH);
+
+        OPERATORS.put("=", TokenType.EQ);
+        OPERATORS.put("==", TokenType.EQEQ);
+        OPERATORS.put("<", TokenType.LT);
+        OPERATORS.put("<=", TokenType.LTEQ);
+        OPERATORS.put(">", TokenType.GT);
+        OPERATORS.put(">=", TokenType.GTEQ);
+        OPERATORS.put("!", TokenType.EXCL);
+        OPERATORS.put("!=", TokenType.EXCLEQ);
+        OPERATORS.put("&", TokenType.AMP);
+        OPERATORS.put("&&", TokenType.AMPAMP);
+        OPERATORS.put("|", TokenType.BAR);
+        OPERATORS.put("||", TokenType.BARBAR);
+    }
+
     private final String input;
     private final int length;
 
@@ -85,17 +106,29 @@ public class Lexer {
         }
 
         String toString = buffer.toString();
-        if (toString.equals("print")) {
-            addToken(TokenType.PRINT);
-        } else {
-            addToken(TokenType.WORD, toString);
+        switch (toString) {
+            case "print" : addToken(TokenType.PRINT); break;
+            case "if" : addToken(TokenType.IF); break;
+            case "else" : addToken(TokenType.ELSE); break;
+            default :
+                addToken(TokenType.WORD, toString);
+                break;
         }
     }
 
     private void tokenizeOperator() {
-        int position = OPERATION_CHARS.indexOf(peek(0));
-        addToken(OPERATION_TOKEN[position]);
-        next();
+        char current = peek(0);
+        if (current == '/') {
+            if (current == '/') {
+                next();
+                next();
+                tokenizeComment();
+            } else if (current == '*'){
+                next();
+                next();
+                tokenizeMultiLineComment();
+            }
+        }
     }
 
     private void tokenizeHexNumber() {
@@ -127,6 +160,24 @@ public class Lexer {
             current = next();
         }
         addToken(TokenType.NUMBER, buffer.toString());
+    }
+
+    private void tokenizeComment() {
+        char current = peek(0);
+        while ("\n\r\0".indexOf(current) == -1) {
+            current = next();
+        }
+    }
+
+    private void tokenizeMultiLineComment() {
+        char current = peek(0);
+        while (true) {
+            current = next();
+            if (current == '*' && peek(1) == '/') {
+
+            }
+
+        }
     }
 
     private char next() {
