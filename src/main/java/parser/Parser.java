@@ -1,8 +1,8 @@
 package parser;
 
-import lib.Function;
 import parser.ast.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Parser {
@@ -63,8 +63,14 @@ public class Parser {
         if (match(TokenType.CONTINUE)) {
             return new ContinueStatement();
         }
+        if (match(TokenType.RETURN)) {
+            return new ReturnStatement(expression());
+        }
         if (match(TokenType.FOR)) {
             return forStatement();
+        }
+        if (match(TokenType.DEF)) {
+            return functionDefine();
         }
         if (get(0).getType() == TokenType.WORD && get(1).getType() == TokenType.LPAREN) {
             return new FunctionStatement(function());
@@ -118,6 +124,20 @@ public class Parser {
         consume(TokenType.RPAREN);
         final Statement statement = statementOrBlock();
         return new ForStatement(initialization, condition, increment, statement);
+    }
+
+
+    private FunctionalDefine functionDefine() {
+        final String name = consume(TokenType.WORD).getText();
+        consume(TokenType.LPAREN);
+        final List<String> argNames = new ArrayList<>();
+        while (!match(TokenType.RPAREN)) {
+            argNames.add(consume(TokenType.WORD).getText());
+            match(TokenType.COMMA);
+        }
+        final Statement body = statementOrBlock();
+
+        return new FunctionalDefine(name, argNames, body);
     }
 
     private FunctionalExpression function() {

@@ -3,6 +3,7 @@ package parser.ast;
 import lib.Function;
 import lib.Functions;
 import lib.Value;
+import lib.Variables;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,21 @@ public class FunctionalExpression implements Expression{
         for (int i = 0; i < size; i++) {
             values[i] = arguments.get(i).eval();
         }
-        return Functions.get(name).execute(values);
+
+        final Function function = Functions.get(name);
+        if (function instanceof UserDefineFunction) {
+            final UserDefineFunction userFunction = (UserDefineFunction) function;
+            if (size != userFunction.getArgSize()) throw new RuntimeException("Args count mismatch");
+
+            Variables.push();
+            for (int i = 0; i < size; i++) {
+                Variables.set(userFunction.getArgName(i), values[i]);
+            }
+            final Value result = userFunction.execute(values);
+            Variables.pop();
+            return result;
+        }
+        return function.execute(values);
     }
 
     @Override

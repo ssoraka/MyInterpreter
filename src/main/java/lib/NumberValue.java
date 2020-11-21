@@ -1,6 +1,7 @@
 package lib;
 
 public class NumberValue implements Value{
+    public static final NumberValue ZERO = new NumberValue(0.0);
     final private double value;
 
     public NumberValue(boolean value) {

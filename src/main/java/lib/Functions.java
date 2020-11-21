@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Functions {
-    public static final NumberValue ZERO = new NumberValue(0.0);
     private static Map<String, Function> functions;
 
     static {
@@ -29,7 +28,7 @@ public class Functions {
                 for (Value arg : args) {
                     System.out.println(arg);
                 }
-                return ZERO;
+                return NumberValue.ZERO;
             }
         });
     }

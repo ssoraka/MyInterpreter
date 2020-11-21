@@ -38,3 +38,18 @@ else print "false"
 
 print "sin(PI) = " + sin(PI)
 echo(1,2,3,"text",sin(PI), cos(PI), PI)
+
+a = 10
+print a
+
+
+def name(a, b) {
+    echo("a = ", a, " b = ", b)
+}
+
+name(1, "test")
+print a
+
+def sum(a,b) {return a + b}
+
+print "summ = " + sum(10,15)
