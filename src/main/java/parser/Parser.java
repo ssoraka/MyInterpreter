@@ -1,5 +1,6 @@
 package parser;
 
+import lib.Function;
 import parser.ast.*;
 
 import java.util.List;
@@ -65,6 +66,9 @@ public class Parser {
         if (match(TokenType.FOR)) {
             return forStatement();
         }
+        if (get(0).getType() == TokenType.WORD && get(1).getType() == TokenType.LPAREN) {
+            return new FunctionStatement(function());
+        }
         return assignmentStatement();
     }
 
@@ -114,6 +118,17 @@ public class Parser {
         consume(TokenType.RPAREN);
         final Statement statement = statementOrBlock();
         return new ForStatement(initialization, condition, increment, statement);
+    }
+
+    private FunctionalExpression function() {
+        final String name = consume(TokenType.WORD).getText();
+        consume(TokenType.LPAREN);
+        final FunctionalExpression function = new FunctionalExpression(name);
+        while (!match(TokenType.RPAREN)) {
+            function.addArguments(expression());
+            match(TokenType.COMMA);
+        }
+        return function;
     }
 
     private Expression expression() {
@@ -241,12 +256,16 @@ public class Parser {
         if (match(TokenType.HEX_NUMBER)) {
             return new ValueExpression(Long.parseLong(current.getText(), 16));
         }
-        if (match(TokenType.TEXT)) {
-            return new ValueExpression(current.getText());
+        if (get(0).getType() == TokenType.WORD && get(1).getType() == TokenType.LPAREN) {
+            return function();
         }
         if (match(TokenType.WORD)) {
             return new VariableExpression(current.getText());
         }
+        if (match(TokenType.TEXT)) {
+            return new ValueExpression(current.getText());
+        }
+
 
         if (match(TokenType.LPAREN)) {
             Expression result = expression();
