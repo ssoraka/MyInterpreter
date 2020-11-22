@@ -54,9 +54,9 @@ def sum(a,b) {return a + b}
 
 print "summ = " + sum(10,15) + "\n"
 
-arr = newarray(1, "text", sum(12, 35))
+arr = [1, "text", sum(12, 35), [], [12, 12]]
 print arr + "\n"
 
-arr[0] = 1000
+arr[0] = 1000 + arr[0]
 
 print arr

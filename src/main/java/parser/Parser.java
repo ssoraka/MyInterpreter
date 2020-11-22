@@ -169,6 +169,16 @@ public class Parser {
         return new ArrayAccessExpression(variable, index);
     }
 
+    private Expression array() {
+        final List<Expression> elements = new ArrayList<>();
+        consume(TokenType.LBRACKET);
+        while (!match(TokenType.RBRACKET)) {
+            elements.add(expression());
+            match(TokenType.COMMA);
+        }
+        return new ArrayExpression(elements);
+    }
+
     private Expression expression() {
         return logicalOr();
     }
@@ -299,6 +309,9 @@ public class Parser {
         }
         if (lookMatch(0,TokenType.WORD) && lookMatch(1, TokenType.LBRACKET)) {
             return element();
+        }
+        if (lookMatch(0,TokenType.LBRACKET)) {
+            return array();
         }
         if (match(TokenType.WORD)) {
             return new VariableExpression(current.getText());
