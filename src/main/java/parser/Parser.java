@@ -88,12 +88,9 @@ public class Parser {
             return new AssignmentStatement(variable, expression());
         }
         if (lookMatch(0,TokenType.WORD) && lookMatch(1, TokenType.LBRACKET)) {
-            final String variable = consume(TokenType.WORD).getText();
-            consume(TokenType.LBRACKET);
-            Expression index = expression();
-            consume(TokenType.RBRACKET);
+            ArrayAccessExpression array = element();
             consume(TokenType.EQ);
-            return new ArrayAssignmentStatement(variable, index, expression());
+            return new ArrayAssignmentStatement(array, expression());
         }
         throw new RuntimeException("Unknown statement");
     }
@@ -161,12 +158,15 @@ public class Parser {
     }
 
 
-    private Expression element() {
+    private ArrayAccessExpression element() {
         final String variable = consume(TokenType.WORD).getText();
-        consume(TokenType.LBRACKET);
-        Expression index = expression();
-        consume(TokenType.RBRACKET);
-        return new ArrayAccessExpression(variable, index);
+        final List<Expression> indexes = new ArrayList<>();
+        do {
+            consume(TokenType.LBRACKET);
+            indexes.add(expression());
+            consume(TokenType.RBRACKET);
+        } while(lookMatch(0, TokenType.LBRACKET));
+        return new ArrayAccessExpression(variable, indexes);
     }
 
     private Expression array() {
