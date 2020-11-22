@@ -1,7 +1,6 @@
 package parser.ast;
 
 import lib.Function;
-import lib.Functions;
 import lib.NumberValue;
 import lib.Value;
 

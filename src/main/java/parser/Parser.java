@@ -1,5 +1,6 @@
 package parser;
 
+import lib.ArrayValue;
 import parser.ast.*;
 
 import java.util.ArrayList;
@@ -81,10 +82,18 @@ public class Parser {
     private Statement assignmentStatement() {
         // word eq
         final Token current = get(0);
-        if (match(TokenType.WORD) && get(0).getType() == TokenType.EQ) {
-            final String variable = current.getText();
+        if (lookMatch(0, TokenType.WORD) && lookMatch(1, TokenType.EQ)) {
+            final String variable = consume(TokenType.WORD).getText();
             consume(TokenType.EQ);
             return new AssignmentStatement(variable, expression());
+        }
+        if (lookMatch(0,TokenType.WORD) && lookMatch(1, TokenType.LBRACKET)) {
+            final String variable = consume(TokenType.WORD).getText();
+            consume(TokenType.LBRACKET);
+            Expression index = expression();
+            consume(TokenType.RBRACKET);
+            consume(TokenType.EQ);
+            return new ArrayAssignmentStatement(variable, index, expression());
         }
         throw new RuntimeException("Unknown statement");
     }
@@ -149,6 +158,15 @@ public class Parser {
             match(TokenType.COMMA);
         }
         return function;
+    }
+
+
+    private Expression element() {
+        final String variable = consume(TokenType.WORD).getText();
+        consume(TokenType.LBRACKET);
+        Expression index = expression();
+        consume(TokenType.RBRACKET);
+        return new ArrayAccessExpression(variable, index);
     }
 
     private Expression expression() {
@@ -276,8 +294,11 @@ public class Parser {
         if (match(TokenType.HEX_NUMBER)) {
             return new ValueExpression(Long.parseLong(current.getText(), 16));
         }
-        if (get(0).getType() == TokenType.WORD && get(1).getType() == TokenType.LPAREN) {
+        if (lookMatch(0,TokenType.WORD) && lookMatch(1, TokenType.LPAREN)) {
             return function();
+        }
+        if (lookMatch(0,TokenType.WORD) && lookMatch(1, TokenType.LBRACKET)) {
+            return element();
         }
         if (match(TokenType.WORD)) {
             return new VariableExpression(current.getText());
@@ -309,6 +330,10 @@ public class Parser {
             return false;
         pos++;
         return true;
+    }
+
+    private boolean lookMatch(int pos, TokenType type) {
+        return get(pos).getType() == type;
     }
 
     private Token get(int relativePosition) {

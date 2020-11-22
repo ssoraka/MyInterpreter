@@ -52,4 +52,11 @@ print a
 
 def sum(a,b) {return a + b}
 
-print "summ = " + sum(10,15)
+print "summ = " + sum(10,15) + "\n"
+
+arr = newarray(1, "text", sum(12, 35))
+print arr + "\n"
+
+arr[0] = 1000
+
+print arr

@@ -22,14 +22,15 @@ public class Functions {
                 return new NumberValue(Math.cos(args[0].asNumber()));
             }
         });
-        functions.put("echo", new Function() {
-            @Override
-            public Value execute(Value... args) {
-                for (Value arg : args) {
-                    System.out.println(arg);
-                }
-                return NumberValue.ZERO;
+        functions.put("echo", args -> {
+            for (Value arg : args) {
+                System.out.println(arg);
             }
+            return NumberValue.ZERO;
+        });
+
+        functions.put("newarray", args -> {
+            return new ArrayValue(args);
         });
     }
 

@@ -1,5 +1,6 @@
 package parser.ast;
 
+import lib.ArrayValue;
 import lib.NumberValue;
 import lib.StringValue;
 import lib.Value;
@@ -21,7 +22,7 @@ public class BinaryExpression implements Expression{
         final Value value1 = expr1.eval();
         final Value value2 = expr2.eval();
 
-        if (value1 instanceof StringValue) {
+        if (value1 instanceof StringValue || value1 instanceof ArrayValue) {
             final String string1 = value1.asString();
             final String string2 = value2.asString();
             switch (operation) {

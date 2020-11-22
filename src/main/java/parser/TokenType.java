@@ -40,6 +40,8 @@ public enum TokenType {
     RPAREN,//)
     LBRASE,//{
     RBRASE,//}
+    LBRACKET,//[
+    RBRACKET,//]
     COMMA,//,
 
     EOF
